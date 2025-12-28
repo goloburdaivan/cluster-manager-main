@@ -21,7 +21,9 @@ Route::prefix('pods')->group(function () {
 Route::prefix('deployments')->group(function () {
     Route::controller(DeploymentController::class)->group(function () {
         Route::get("/", "index");
+        Route::get("/{namespace}/{name}", "show");
         Route::post("/", "create");
+        Route::delete("/{namespace}/{name}", "destroy");
         Route::patch("/scale", "scale");
     });
 });

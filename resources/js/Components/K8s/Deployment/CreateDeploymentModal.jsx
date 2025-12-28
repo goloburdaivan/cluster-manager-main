@@ -63,7 +63,6 @@ function DeploymentForm({ code, setCode, yamlLib, namespaces }) {
 
             if (field === 'name') {
                 doc.metadata.name = value;
-                if (!doc.metadata.annotations) doc.metadata.annotations = {};
                 if (doc.metadata.labels) doc.metadata.labels['app'] = value;
                 if (doc.spec?.selector?.matchLabels) doc.spec.selector.matchLabels['app'] = value;
                 if (doc.spec?.template?.metadata?.labels) doc.spec.template.metadata.labels['app'] = value;

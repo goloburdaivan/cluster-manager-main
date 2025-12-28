@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import AppLayout from '../../Layouts/AppLayout.jsx';
 import {router} from '@inertiajs/react';
 import {
-    Table, Badge, Text, Heading, Card, Flex, Box, IconButton, Tooltip, Dialog, Button, TextField
+    Table, Badge, Text, Heading, Card, Flex, Box, IconButton, Tooltip, Dialog, Button, TextField,
+    DropdownMenu,
 } from '@radix-ui/themes';
 import {
     ComponentPlaceholderIcon,
@@ -10,19 +11,18 @@ import {
     ReloadIcon,
     TrashIcon,
     Pencil1Icon,
-    HeightIcon, StackIcon
+    HeightIcon, StackIcon, UpdateIcon, CounterClockwiseClockIcon
 } from '@radix-ui/react-icons';
 
 import NamespaceSelector from "../../Components/K8s/Namespace/NamespaceSelector.jsx";
 import RightPanel from "../../Components/RightPanel";
-import {PlusIcon} from "lucide-react";
-import CreateResourceModal from "../../Components/K8s/CreateResourceModal.jsx";
+import {ClipboardIcon, PauseIcon, PlayIcon, PlusIcon} from "lucide-react";
 import CreateDeploymentModal from "../../Components/K8s/Deployment/CreateDeploymentModal.jsx";
+import DeploymentDetails from "../../Components/K8s/Deployment/DeploymentDetails.jsx";
 
 const getStatusColor = (status) => {
     switch (status) {
         case 'Ready':
-            return 'green';
         case 'Available':
             return 'green';
         case 'Progressing':
@@ -42,6 +42,8 @@ export default function DeploymentsIndex({deployments, namespaces}) {
     const [scaleCount, setScaleCount] = useState(1);
     const [isCreateOpen, setIsCreateOpen] = useState(false);
 
+    const [deletingDeployment, setDeletingDeployment] = useState(null);
+
     const handleReload = () => {
         router.reload({only: ['deployments']});
     };
@@ -58,6 +60,20 @@ export default function DeploymentsIndex({deployments, namespaces}) {
             replicas: parseInt(scaleCount)
         }, {
             onSuccess: () => setScalingDeployment(null),
+            preserveScroll: true
+        });
+    };
+
+    const handleDelete = () => {
+        if (!deletingDeployment) return;
+
+        router.delete(`/deployments/${deletingDeployment.namespace}/${deletingDeployment.name}`, {
+            onSuccess: () => {
+                setDeletingDeployment(null);
+                if (selectedDeployment?.name === deletingDeployment.name) {
+                    setSelectedDeployment(null);
+                }
+            },
             preserveScroll: true
         });
     };
@@ -147,7 +163,6 @@ export default function DeploymentsIndex({deployments, namespaces}) {
                                             <Text size="2" color="gray">{deploy.namespace}</Text>
                                         </Table.Cell>
 
-                                        {/* PODS COUNT */}
                                         <Table.Cell>
                                             <Flex align="center" gap="2">
                                                 <Text size="2" weight="bold">{deploy.ready_replicas}</Text>
@@ -192,16 +207,53 @@ export default function DeploymentsIndex({deployments, namespaces}) {
                                                         <Pencil1Icon/>
                                                     </IconButton>
                                                 </Tooltip>
-
                                                 <Tooltip content="Delete Deployment">
-                                                    <IconButton variant="ghost" color="red" style={{cursor: 'pointer'}}>
+                                                    <IconButton
+                                                        variant="ghost"
+                                                        color="red"
+                                                        style={{cursor: 'pointer'}}
+                                                        onClick={() => setDeletingDeployment(deploy)}
+                                                    >
                                                         <TrashIcon/>
                                                     </IconButton>
                                                 </Tooltip>
 
-                                                <IconButton variant="ghost" color="gray" style={{cursor: 'pointer'}}>
-                                                    <DotsHorizontalIcon/>
-                                                </IconButton>
+                                                <DropdownMenu.Root>
+                                                    <DropdownMenu.Trigger>
+                                                        <IconButton variant="ghost" color="gray">
+                                                            <DotsHorizontalIcon />
+                                                        </IconButton>
+                                                    </DropdownMenu.Trigger>
+                                                    <DropdownMenu.Content>
+
+                                                        <DropdownMenu.Item onSelect={() => handleRestart(deploy)}>
+                                                            <UpdateIcon /> Restart
+                                                        </DropdownMenu.Item>
+
+                                                        <DropdownMenu.Item onSelect={() => handleRollback(deploy)}>
+                                                            <CounterClockwiseClockIcon /> Rollback
+                                                        </DropdownMenu.Item>
+
+                                                        <DropdownMenu.Separator />
+
+                                                        {deploy.spec?.paused ? (
+                                                            <DropdownMenu.Item onSelect={() => handleResume(deploy)}>
+                                                                <PlayIcon /> Resume
+                                                            </DropdownMenu.Item>
+                                                        ) : (
+                                                            <DropdownMenu.Item onSelect={() => handlePause(deploy)}>
+                                                                <PauseIcon /> Pause Rollout
+                                                            </DropdownMenu.Item>
+                                                        )}
+
+                                                        <DropdownMenu.Separator />
+
+                                                        <DropdownMenu.Item onSelect={() => navigator.clipboard.writeText(deploy.name)}>
+                                                            <ClipboardIcon /> Copy Name
+                                                        </DropdownMenu.Item>
+
+                                                    </DropdownMenu.Content>
+                                                </DropdownMenu.Root>
                                             </Flex>
                                         </Table.Cell>
 
@@ -213,10 +265,10 @@ export default function DeploymentsIndex({deployments, namespaces}) {
                 </Card>
 
                 <RightPanel isOpen={!!selectedDeployment} onClose={() => setSelectedDeployment(null)}>
-                    <Box p="4">
-                        <Heading size="4">{selectedDeployment?.name}</Heading>
-                        <Text>Details component coming soon...</Text>
-                    </Box>
+                    <DeploymentDetails
+                        deployment={selectedDeployment}
+                        onClose={() => setSelectedDeployment(null)}
+                    />
                 </RightPanel>
 
                 <Dialog.Root open={!!scalingDeployment} onOpenChange={(open) => !open && setScalingDeployment(null)}>
@@ -225,12 +277,9 @@ export default function DeploymentsIndex({deployments, namespaces}) {
                         <Dialog.Description size="2" mb="4">
                             Change the number of replicas for <strong>{scalingDeployment?.name}</strong>.
                         </Dialog.Description>
-
                         <Flex direction="column" gap="3">
                             <label>
-                                <Text as="div" size="2" mb="1" weight="bold">
-                                    Replicas
-                                </Text>
+                                <Text as="div" size="2" mb="1" weight="bold">Replicas</Text>
                                 <TextField.Root
                                     type="number"
                                     min="0"
@@ -239,6 +288,23 @@ export default function DeploymentsIndex({deployments, namespaces}) {
                                 </TextField.Root>
                             </label>
                         </Flex>
+                        <Flex gap="3" mt="4" justify="end">
+                            <Dialog.Close>
+                                <Button variant="soft" color="gray">Cancel</Button>
+                            </Dialog.Close>
+                            <Button onClick={handleScaleSubmit}>Scale</Button>
+                        </Flex>
+                    </Dialog.Content>
+                </Dialog.Root>
+
+                <Dialog.Root open={!!deletingDeployment} onOpenChange={(open) => !open && setDeletingDeployment(null)}>
+                    <Dialog.Content style={{ maxWidth: 450 }}>
+                        <Dialog.Title color="red">Delete Deployment</Dialog.Title>
+                        <Dialog.Description size="2" mb="4">
+                            Are you sure you want to delete the deployment <strong>{deletingDeployment?.name}</strong> in namespace <strong>{deletingDeployment?.namespace}</strong>?
+                            <br/><br/>
+                            <Text color="red" size="1">Warning: This action cannot be undone and will terminate all pods managed by this deployment.</Text>
+                        </Dialog.Description>
 
                         <Flex gap="3" mt="4" justify="end">
                             <Dialog.Close>
@@ -246,8 +312,8 @@ export default function DeploymentsIndex({deployments, namespaces}) {
                                     Cancel
                                 </Button>
                             </Dialog.Close>
-                            <Button onClick={handleScaleSubmit}>
-                                Scale
+                            <Button color="red" variant="solid" onClick={handleDelete}>
+                                Delete
                             </Button>
                         </Flex>
                     </Dialog.Content>

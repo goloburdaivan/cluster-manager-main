@@ -8,6 +8,7 @@ use App\Http\Requests\Deployment\CreateDeploymentRequest;
 use App\Http\Requests\Deployment\GetDeploymentsRequest;
 use App\Http\Requests\Deployment\ScaleDeploymentRequest;
 use App\Services\DeploymentService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -38,6 +39,19 @@ class DeploymentController extends Controller implements NeedsNamespaces
         }
     }
 
+    public function show(string $namespace, string $name): JsonResponse
+    {
+        try {
+            $deployment = $this->deploymentService->getDeployment($namespace, $name);
+
+            return response()->json($deployment);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
     public function create(CreateDeploymentRequest $request): RedirectResponse
     {
         try {
@@ -52,6 +66,21 @@ class DeploymentController extends Controller implements NeedsNamespaces
             return back()->with('success', 'Deployment successfully created');
         } catch (\Throwable $exception) {
             dd($exception->getMessage());
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function destroy(string $namespace, string $name): RedirectResponse
+    {
+        try {
+            $result = $this->deploymentService->deleteDeployment($namespace, $name);
+
+            if (!$result) {
+                return back()->with('error', 'Failed to delete deployment');
+            }
+
+            return back()->with('success', 'Deployment successfully deleted');
+        } catch (\Throwable $exception) {
             return back()->with('error', $exception->getMessage());
         }
     }

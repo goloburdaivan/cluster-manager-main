@@ -18,9 +18,19 @@ readonly class DeploymentService
         return $this->client->deployments()->all($namespace);
     }
 
+    public function getDeployment(string $namespace, string $name): DeploymentData
+    {
+        return $this->client->deployments()->get($namespace, $name);
+    }
+
     public function createDeployment(DeploymentData $deployment): bool
     {
         return $this->client->deployments()->create($deployment);
+    }
+
+    public function deleteDeployment(string $namespace, string $name): bool
+    {
+        return $this->client->deployments()->delete($namespace, $name);
     }
 
     public function scaleDeployment(string $namespace, string $name, int $replicas): bool

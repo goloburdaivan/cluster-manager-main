@@ -10,6 +10,7 @@ class DeploymentData extends Data
         public string $apiVersion,
         public string $kind,
         public MetadataData $metadata,
-        public DeploymentSpecData $spec,
+        public array $spec,
+        public ?array $status = null,
     ) {}
 }

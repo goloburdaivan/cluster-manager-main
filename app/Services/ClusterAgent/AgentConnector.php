@@ -50,6 +50,15 @@ class AgentConnector
         return $this->client()->patch($endpoint, $data)->throw();
     }
 
+    /**
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function delete(string $endpoint, array $data = []): Response
+    {
+        return $this->client()->delete($endpoint, $data)->throw();
+    }
+
     private function client(): PendingRequest
     {
         return Http::baseUrl($this->baseUrl)
