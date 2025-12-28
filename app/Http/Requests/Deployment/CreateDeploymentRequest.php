@@ -27,7 +27,7 @@ class CreateDeploymentRequest extends FormRequest
             'kind' => ['required', 'string', Rule::in(['Deployment'])],
             'metadata' => ['required', 'array'],
             'metadata.name' => ['required', 'string', 'max:253', 'regex:/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/'],
-            'metadata.namespace' => ['nullable', 'string', 'default:default'],
+            'metadata.namespace' => ['required', 'string'],
             'metadata.labels' => ['nullable', 'array'],
             'metadata.annotations' => ['nullable', 'array'],
 

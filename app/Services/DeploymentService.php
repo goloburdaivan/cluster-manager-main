@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTO\K8sResources\Deployment\DeploymentData;
 use App\Services\ClusterAgent\K8sAgentClient;
 use Illuminate\Support\Collection;
 
@@ -15,6 +16,11 @@ readonly class DeploymentService
     public function getDeployments(string $namespace = 'default'): Collection
     {
         return $this->client->deployments()->all($namespace);
+    }
+
+    public function createDeployment(DeploymentData $deployment): bool
+    {
+        return $this->client->deployments()->create($deployment);
     }
 
     public function scaleDeployment(string $namespace, string $name, int $replicas): bool

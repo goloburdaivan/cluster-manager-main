@@ -11,10 +11,10 @@ class ContainerData extends Data
         public string $image,
         public ?string $imagePullPolicy = 'IfNotPresent',
         public ?array $ports = [],
-        public ?array $resources = [],
-        public ?array $env = [],
+        public ?array $resources = null,
+        public ?array $env = null,
         public ?array $livenessProbe = null,
         public ?array $readinessProbe = null,
-        public ?array $volumeMounts = [],
+        public ?array $volumeMounts = null,
     ) {}
 }

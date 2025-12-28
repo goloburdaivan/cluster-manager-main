@@ -10,7 +10,10 @@ export const getDeploymentTemplate = (name = 'my-app', namespace = 'default', im
         replicas: 1,
         selector: { matchLabels: { app: name } },
         template: {
-            metadata: { labels: { app: name } },
+            metadata: {
+                name: name,
+                labels: { app: name }
+            },
             spec: {
                 containers: [{
                     name: 'main',

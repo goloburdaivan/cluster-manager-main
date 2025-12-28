@@ -9,7 +9,7 @@ class MetadataData extends Data
     public function __construct(
         public string $name,
         public ?string $namespace = 'default',
-        public ?array $labels = [],
-        public ?array $annotations = [],
+        public ?array $labels = null,
+        public ?array $annotations = null,
     ) {}
 }

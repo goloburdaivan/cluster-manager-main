@@ -10,8 +10,8 @@ class PodSpecData extends Data
         /** @var ContainerData[] */
         public array $containers,
         public ?string $restartPolicy = 'Always',
-        public ?array $nodeSelector = [],
+        public ?array $nodeSelector = null,
         public ?string $serviceAccountName = null,
-        public ?array $volumes = [],
+        public ?array $volumes = null,
     ) {}
 }

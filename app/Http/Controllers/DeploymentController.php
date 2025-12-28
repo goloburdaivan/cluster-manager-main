@@ -43,9 +43,15 @@ class DeploymentController extends Controller implements NeedsNamespaces
         try {
             $deployment = DeploymentData::from($request);
 
-            dd($deployment);
+            $result = $this->deploymentService->createDeployment($deployment);
+
+            if (!$result) {
+                return back()->with('error', 'Failed to create deployment');
+            }
+
+            return back()->with('success', 'Deployment successfully created');
         } catch (\Throwable $exception) {
-            dd($exception);
+            dd($exception->getMessage());
             return back()->with('error', $exception->getMessage());
         }
     }
