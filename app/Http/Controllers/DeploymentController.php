@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Controllers\NeedsNamespaces;
+use App\DTO\K8sResources\Deployment\DeploymentData;
+use App\Http\Requests\Deployment\CreateDeploymentRequest;
 use App\Http\Requests\Deployment\GetDeploymentsRequest;
 use App\Http\Requests\Deployment\ScaleDeploymentRequest;
 use App\Services\DeploymentService;
@@ -33,6 +35,18 @@ class DeploymentController extends Controller implements NeedsNamespaces
                 'deployments' => [],
                 'error' => $e->getMessage(),
             ]);
+        }
+    }
+
+    public function create(CreateDeploymentRequest $request): RedirectResponse
+    {
+        try {
+            $deployment = DeploymentData::from($request);
+
+            dd($deployment);
+        } catch (\Throwable $exception) {
+            dd($exception);
+            return back()->with('error', $exception->getMessage());
         }
     }
 

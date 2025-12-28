@@ -3,14 +3,15 @@ import { TextField, Select, Text } from '@radix-ui/themes';
 import CreateResourceModal from '../CreateResourceModal.jsx'
 import yaml from "js-yaml";
 import {getDeploymentTemplate} from "../../../Constants/k8s-template.js";
+import {router} from "@inertiajs/react";
 
 export default function CreateDeploymentModal({ isOpen, onClose, namespaces = [] }) {
 
     const handleCreate = async (yamlCode) => {
         const deploymentObject = yaml.load(yamlCode)
-        console.log(deploymentObject);
-        console.log("Creating Deployment with YAML:", yamlCode);
-        return new Promise(resolve => setTimeout(resolve, 1000));
+        router.post('/deployments', deploymentObject, {
+            preserveScroll: true
+        });
     };
 
     return (

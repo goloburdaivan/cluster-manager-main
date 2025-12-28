@@ -21,6 +21,7 @@ Route::prefix('pods')->group(function () {
 Route::prefix('deployments')->group(function () {
     Route::controller(DeploymentController::class)->group(function () {
         Route::get("/", "index");
+        Route::post("/", "create");
         Route::patch("/scale", "scale");
     });
 });
