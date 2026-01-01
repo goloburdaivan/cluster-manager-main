@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\DeploymentController;
+use App\Http\Controllers\K8sEventController;
 use App\Http\Controllers\NodeController;
 use App\Http\Controllers\PodController;
+use App\Http\Controllers\TopologyController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('nodes')->group(function () {
@@ -26,4 +28,14 @@ Route::prefix('deployments')->group(function () {
         Route::delete("/{namespace}/{name}", "destroy");
         Route::patch("/scale", "scale");
     });
+});
+
+Route::prefix('events')->group(function () {
+    Route::controller(K8sEventController::class)->group(function () {
+        Route::get("/", "index");
+    });
+});
+
+Route::prefix('topology')->group(function () {
+    Route::get('/', TopologyController::class);
 });

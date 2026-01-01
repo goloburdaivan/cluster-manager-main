@@ -18,13 +18,17 @@ import {
     ComponentPlaceholderIcon,
     LockClosedIcon,
     GlobeIcon,
-    ReaderIcon
+    ReaderIcon,
+    BellIcon
 } from '@radix-ui/react-icons';
+import {Share2Icon} from "lucide-react";
 
 // Структура меню
 const MENU_ITEMS = [
     { label: 'Cluster', icon: <DashboardIcon />, href: '/' },
     { label: 'Nodes', icon: <DesktopIcon />, href: '/nodes' },
+    { label: 'Events', icon: <BellIcon />, href: '/events' },
+    { label: 'Topology', icon: <Share2Icon />, href: '/topology' },
     {
         label: 'Workloads',
         icon: <LayersIcon />,

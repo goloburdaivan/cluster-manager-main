@@ -6,6 +6,7 @@ use App\Services\ClusterAgent\Resources\DeploymentResource;
 use App\Services\ClusterAgent\Resources\NamespaceResource;
 use App\Services\ClusterAgent\Resources\NodeResource;
 use App\Services\ClusterAgent\Resources\PodResource;
+use App\Services\ClusterAgent\Resources\TopologyResource;
 
 class K8sAgentClient
 {
@@ -35,5 +36,10 @@ class K8sAgentClient
     public function namespaces(): NamespaceResource
     {
         return $this->resources['namespaces'] ??= new NamespaceResource($this->connector);
+    }
+
+    public function topology(): TopologyResource
+    {
+        return $this->resources['topology'] ??= new TopologyResource($this->connector);
     }
 }

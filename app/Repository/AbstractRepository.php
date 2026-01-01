@@ -2,10 +2,17 @@
 
 namespace App\Repository;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractRepository
 {
+    public function query(): Builder
+    {
+        $model = $this->model();
+        return $model::query();
+    }
+
     public function create(array $data): Model
     {
         $modelName = $this->model();

@@ -35,6 +35,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['namespace', 'object_kind', 'object_name']);
+            $table->index(['namespace', 'last_seen_at']);
+            $table->index(['type', 'last_seen_at']);
         });
     }
 

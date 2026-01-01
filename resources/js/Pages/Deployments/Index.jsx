@@ -82,7 +82,6 @@ export default function DeploymentsIndex({deployments, namespaces}) {
         <AppLayout title="Deployments">
             <Flex direction="column" gap="5">
 
-                {/* --- HEADER --- */}
                 <Flex justify="between" align="end">
                     <Box>
                         <Heading size="6" mb="1">Deployments</Heading>
