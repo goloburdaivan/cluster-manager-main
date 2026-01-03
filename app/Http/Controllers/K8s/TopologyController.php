@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\K8s;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\General\NamespaceRequest;
-use App\Services\TopologyService;
+use App\Services\K8s\TopologyService;
 use Inertia\Inertia;
 use Inertia\Response;
 

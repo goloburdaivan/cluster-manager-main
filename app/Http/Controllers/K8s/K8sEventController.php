@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\K8s;
 
 use App\Contracts\Controllers\NeedsNamespaces;
 use App\DTO\Filtering\K8sEventFilterData;
 use App\Enums\K8sResources\Event\K8sEventType;
 use App\Enums\K8sResources\Event\K8sObjectKind;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\K8sEvent\GetK8sEventsRequest;
 use App\Http\Resources\K8sEventResource;
-use App\Services\K8sEventService;
+use App\Services\K8s\K8sEventService;
 use Inertia\Inertia;
 use Inertia\Response;
 

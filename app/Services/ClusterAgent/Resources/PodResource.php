@@ -8,15 +8,13 @@ use Illuminate\Support\Collection;
 
 class PodResource extends AbstractResource
 {
-    public function all(string $namespace): Collection
+    public function all(string $namespace = 'default'): Collection
     {
-        $query = [
-            'namespace' => $namespace,
-        ];
+        $response = $this->connector
+            ->get('/pods', $this->queryWithNamespace($namespace))
+            ->json('data');
 
-        $response = $this->connector->get('/pods', $query);
-
-        return PodData::collect($response->json()['data'], Collection::class);
+        return PodData::collect($response, Collection::class);
     }
 
     public function get(string $namespace, string $name): PodDetailData

@@ -8,11 +8,9 @@ class TopologyResource extends AbstractResource
 {
     public function getTopology(string $namespace): Graph
     {
-        $query = [
-            'namespace' => $namespace,
-        ];
-
-        $response = $this->connector->get("/topology", $query)->json();
+        $response = $this->connector
+            ->get("/topology", $this->queryWithNamespace($namespace))
+            ->json();
 
         return Graph::from($response);
     }

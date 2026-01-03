@@ -26,6 +26,7 @@ import RightPanel from "../../Components/RightPanel.jsx";
 import PodDetails from "../../Components/K8s/Pod/PodDetails.jsx";
 import PodTerminal from "../../Components/K8s/Pod/PodTerminal.jsx";
 import NamespaceSelector from "../../Components/K8s/Namespace/NamespaceSelector.jsx";
+import PodLogs from "../../Components/K8s/Pod/PodLogs.jsx";
 
 const getStatusColor = (status) => {
     switch (status) {
@@ -52,6 +53,7 @@ export default function PodsIndex({ pods, namespaces }) {
 
     const [selectedPod, setSelectedPod] = useState(null);
     const [terminalPod, setTerminalPod] = useState(null);
+    const [logsPod, setLogsPod] = useState(null);
 
     const handleReload = () => {
         router.reload({ only: ['pods'] });
@@ -188,7 +190,14 @@ export default function PodsIndex({ pods, namespaces }) {
                                                     </IconButton>
                                                 </Tooltip>
                                                 <Tooltip content="View Logs">
-                                                    <IconButton variant="ghost" color="gray">
+                                                    <IconButton
+                                                        variant="ghost"
+                                                        color="gray"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setLogsPod(pod);
+                                                        }}
+                                                    >
                                                         <ReaderIcon />
                                                     </IconButton>
                                                 </Tooltip>
@@ -245,6 +254,32 @@ export default function PodsIndex({ pods, namespaces }) {
                             {terminalPod && (
                                 <PodTerminal
                                     pod={terminalPod}
+                                    container=""
+                                />
+                            )}
+                        </Box>
+
+                    </Dialog.Content>
+                </Dialog.Root>
+
+                <Dialog.Root open={!!logsPod} onOpenChange={(open) => !open && setLogsPod(null)}>
+                    <Dialog.Content style={{ maxWidth: '1000px', height: '70vh', padding: 0, display: 'flex', flexDirection: 'column' }}>
+
+                        <Flex justify="between" align="center" p="3" style={{ borderBottom: '1px solid var(--gray-5)', backgroundColor: 'var(--gray-2)' }}>
+                            <Flex align="center" gap="2">
+                                <ReaderIcon />
+                                <Text weight="bold">Logs: {logsPod?.name}</Text>
+                                <Badge variant="outline">{logsPod?.namespace}</Badge>
+                            </Flex>
+                            <IconButton variant="ghost" color="gray" onClick={() => setLogsPod(null)}>
+                                <Cross1Icon />
+                            </IconButton>
+                        </Flex>
+
+                        <Box style={{ flexGrow: 1, backgroundColor: '#1e1e1e', position: 'relative' }}>
+                            {logsPod && (
+                                <PodLogs
+                                    pod={logsPod}
                                     container=""
                                 />
                             )}

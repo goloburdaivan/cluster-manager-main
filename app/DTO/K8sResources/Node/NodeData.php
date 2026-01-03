@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO\K8sResources;
+namespace App\DTO\K8sResources\Node;
 use App\Enums\K8sResources\Node\NodeStatus;
 use Spatie\LaravelData\Data;
 

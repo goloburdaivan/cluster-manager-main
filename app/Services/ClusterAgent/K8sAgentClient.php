@@ -2,10 +2,14 @@
 
 namespace App\Services\ClusterAgent;
 
+use App\Services\ClusterAgent\Resources\ConfigMapResource;
 use App\Services\ClusterAgent\Resources\DeploymentResource;
+use App\Services\ClusterAgent\Resources\IngressResource;
 use App\Services\ClusterAgent\Resources\NamespaceResource;
 use App\Services\ClusterAgent\Resources\NodeResource;
 use App\Services\ClusterAgent\Resources\PodResource;
+use App\Services\ClusterAgent\Resources\SecretResource;
+use App\Services\ClusterAgent\Resources\ServiceResource;
 use App\Services\ClusterAgent\Resources\TopologyResource;
 
 class K8sAgentClient
@@ -41,5 +45,25 @@ class K8sAgentClient
     public function topology(): TopologyResource
     {
         return $this->resources['topology'] ??= new TopologyResource($this->connector);
+    }
+
+    public function services(): ServiceResource
+    {
+        return $this->resources['services'] ??= new ServiceResource($this->connector);
+    }
+
+    public function ingresses(): IngressResource
+    {
+        return $this->resources['ingresses'] ??= new IngressResource($this->connector);
+    }
+
+    public function configMaps(): ConfigMapResource
+    {
+        return $this->resources['configmaps'] ??= new ConfigMapResource($this->connector);
+    }
+
+    public function secrets(): SecretResource
+    {
+        return $this->resources['secrets'] ??= new SecretResource($this->connector);
     }
 }

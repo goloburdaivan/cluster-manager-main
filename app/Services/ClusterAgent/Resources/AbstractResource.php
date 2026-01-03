@@ -10,4 +10,11 @@ abstract class AbstractResource
         protected AgentConnector $connector,
     ) {
     }
+
+    protected function queryWithNamespace(string $namespace, array $query = []): array
+    {
+        return array_merge($query, [
+            'namespace' => $namespace,
+        ]);
+    }
 }

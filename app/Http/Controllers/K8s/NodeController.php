@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\K8s;
 
-use App\Services\NodeService;
+use App\Http\Controllers\Controller;
+use App\Services\K8s\NodeService;
 use Inertia\Inertia;
 use Inertia\Response;
 

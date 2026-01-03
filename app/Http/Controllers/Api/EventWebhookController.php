@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreK8sEventsRequest;
-use App\Services\K8sEventService;
+use App\Services\K8s\K8sEventService;
 use Illuminate\Http\Response;
 
 class EventWebhookController extends Controller

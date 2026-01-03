@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Contracts\Controllers\NeedsNamespaces;
-use App\Services\NamespaceService;
+use App\Services\K8s\NamespaceService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 

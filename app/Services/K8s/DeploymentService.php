@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\K8s;
 
 use App\DTO\K8sResources\Deployment\DeploymentData;
 use App\Services\ClusterAgent\K8sAgentClient;

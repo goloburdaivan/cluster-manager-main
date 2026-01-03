@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\K8s;
 
 use App\Contracts\Controllers\NeedsNamespaces;
 use App\DTO\K8sResources\Deployment\DeploymentData;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Deployment\CreateDeploymentRequest;
 use App\Http\Requests\Deployment\GetDeploymentsRequest;
 use App\Http\Requests\Deployment\ScaleDeploymentRequest;
-use App\Services\DeploymentService;
+use App\Services\K8s\DeploymentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\K8s;
 
 use App\DTO\Filtering\K8sEventFilterData;
 use App\Jobs\ProcessK8sEventsJob;

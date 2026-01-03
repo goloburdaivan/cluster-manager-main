@@ -4,22 +4,17 @@ namespace App\Services\ClusterAgent\Resources;
 
 use App\DTO\K8sResources\Deployment\DeploymentData;
 use App\DTO\K8sResources\Deployment\DeploymentListData;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Collection;
 
 class DeploymentResource extends AbstractResource
 {
     public function all(string $namespace = 'default'): Collection
     {
-        $query = [
-            'namespace' => $namespace,
-        ];
+        $response = $this->connector
+            ->get('/deployments', $this->queryWithNamespace($namespace))
+            ->json('data');
 
-        $response = $this->connector->get('/deployments', $query);
-        $deployments = $response->json('data');
-
-        return DeploymentListData::collect($deployments, Collection::class);
+        return DeploymentListData::collect($response, Collection::class);
     }
 
     public function get(string $namespace, string $name): DeploymentData

@@ -19,35 +19,40 @@ import {
     LockClosedIcon,
     GlobeIcon,
     ReaderIcon,
-    BellIcon
+    BellIcon, CookieIcon
 } from '@radix-ui/react-icons';
 import {Share2Icon} from "lucide-react";
 
-// Структура меню
 const MENU_ITEMS = [
     { label: 'Cluster', icon: <DashboardIcon />, href: '/' },
     { label: 'Nodes', icon: <DesktopIcon />, href: '/nodes' },
-    { label: 'Events', icon: <BellIcon />, href: '/events' },
-    { label: 'Topology', icon: <Share2Icon />, href: '/topology' },
     {
         label: 'Workloads',
         icon: <LayersIcon />,
         children: [
             { label: 'Pods', href: '/pods', icon: <CubeIcon /> },
             { label: 'Deployments', href: '/deployments', icon: <ComponentPlaceholderIcon /> },
+        ]
+    },
+    {
+        label: 'Network',
+        icon: <GlobeIcon />,
+        children: [
             { label: 'Services', href: '/services', icon: <GlobeIcon /> },
+            { label: 'Ingress', href: '/ingresses', icon: <GlobeIcon /> },
         ]
     },
     {
         label: 'Config',
         icon: <ReaderIcon />,
         children: [
-            { label: 'Namespaces', href: '/namespaces', icon: <CubeIcon /> },
-            { label: 'Secrets', href: '/secrets', icon: <LockClosedIcon /> },
+            { label: 'ConfigMaps', href: '/configmaps', icon: <ReaderIcon /> },
+            { label: 'Secrets', href: '/secrets', icon: <LockClosedIcon /> }
         ]
     },
-    { label: 'Network', icon: <GlobeIcon />, href: '/network' },
-    { label: 'Storage', icon: <ComponentPlaceholderIcon />, href: '/storage' },
+    { label: 'Storage', icon: <CookieIcon />, href: '/storage' },
+    { label: 'Topology', icon: <Share2Icon />, href: '/topology' },
+    { label: 'Events', icon: <BellIcon />, href: '/events' },
 ];
 
 const SidebarItem = ({ item, currentUrl }) => {

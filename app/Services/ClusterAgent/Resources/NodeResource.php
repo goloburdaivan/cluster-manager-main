@@ -2,7 +2,7 @@
 
 namespace App\Services\ClusterAgent\Resources;
 
-use App\DTO\K8sResources\NodeData;
+use App\DTO\K8sResources\Node\NodeData;
 use Illuminate\Support\Collection;
 
 class NodeResource extends AbstractResource
